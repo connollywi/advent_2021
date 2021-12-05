@@ -2,7 +2,6 @@ import pytest
 from . import process
 
 
-
 @pytest.mark.parametrize(
     "input_numbers, expected",
     [
