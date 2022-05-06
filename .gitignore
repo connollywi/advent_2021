@@ -1,1 +1,5 @@
 __pycache__/
+.idea/
+.python-version
+venv/
+advent/
