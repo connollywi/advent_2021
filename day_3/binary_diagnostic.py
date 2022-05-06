@@ -16,14 +16,12 @@ class BinaryDiagnostic:
     def most_common_bit(self, input_binary_string):
         return input_binary_string.count("1") >= input_binary_string.count("0")
 
-
     def get_rate_binary(self):
         binary_number = ""
         for index in range(len(self.binary_report[0])):
             bits = self.nth_bits(self.binary_report, index)
             binary_number += "1" if self.most_common_bit(bits) else "0"
         return binary_number
-
 
     @property
     def gamma_rate(self):
@@ -38,34 +36,28 @@ class BinaryDiagnostic:
     def power_consumption(self):
         return self.gamma_rate * self.epsilon_rate
 
-    @property
-    def oxygen_generator_rating(self):
+    def filter_report(self, mode):
         cache = self.binary_report.copy()
         for index in range(len(self.binary_report[0])):
             bits = self.nth_bits(cache, index)
             most_common_bit = self.most_common_bit(bits)
-            filtered = [entry for entry in cache if int(entry[index]) == most_common_bit]
-            cache = filtered
+            criteria = most_common_bit if mode else (not most_common_bit)
+            cache = [entry for entry in cache if int(entry[index]) == criteria]
             if len(cache) == 1:
                 break
         return int(cache[0], 2)
 
     @property
+    def oxygen_generator_rating(self):
+        return self.filter_report(True)
+
+    @property
     def co2_scrubber_rating(self):
-        cache = self.binary_report.copy()
-        for index in range(len(self.binary_report[0])):
-            bits = self.nth_bits(cache, index)
-            most_common_bit = self.most_common_bit(bits)
-            filtered = [entry for entry in cache if int(entry[index]) != most_common_bit]
-            cache = filtered
-            if len(cache) == 1:
-                break
-        return int(cache[0], 2)
+        return self.filter_report(False)
 
     @property
     def life_support_rating(self):
         return self.oxygen_generator_rating * self.co2_scrubber_rating
-
 
 
 def get_input(path):
